@@ -1,0 +1,9 @@
+{
+    "name": "database-management-stub",
+    "version": "0.0.0",
+    "solves": "database.management",
+    "type": "module",
+    "requires": [],
+    "exposes": [],
+    "config": []
+}
