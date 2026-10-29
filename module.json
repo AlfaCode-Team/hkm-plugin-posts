@@ -1,0 +1,116 @@
+{
+    "name": "posts",
+    "version": "0.1.0",
+    "kernel": "^1.13.1",
+    "solves": "post.publishing",
+    "type": "module",
+
+    "requires": ["database.management"],
+
+    "exposes": [
+        "Plugins\\Posts\\API\\Contracts\\PostServiceContract",
+        "Plugins\\Posts\\API\\Contracts\\PostCategoryServiceContract",
+        "Plugins\\Posts\\API\\Contracts\\PostSyndicationContract"
+    ],
+
+    "emits": ["post.published", "post.updated", "post.unpublished", "post.deleted"],
+    "listens": [],
+
+    "routes": [
+        { "method": "GET", "path": "/admin/posts",                    "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\PostFlowController@index",      "requires": ["http.pageflow"], "filters": ["posts.editor"] },
+        { "method": "GET", "path": "/admin/posts/create",             "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\PostFlowController@create",     "requires": ["http.pageflow"], "filters": ["posts.editor"] },
+        { "method": "GET", "path": "/admin/posts/categories",         "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\PostFlowController@categories", "requires": ["http.pageflow"], "filters": ["posts.editor"] },
+        { "method": "GET", "path": "/admin/posts/{id:alphanum}/edit", "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\PostFlowController@edit",       "requires": ["http.pageflow"], "filters": ["posts.editor"] }
+    ],
+
+    "groups": [
+        {
+            "prefix": "/api/posts",
+            "name": "posts.",
+            "filters": ["posts.cache"],
+            "routes": [
+                { "method": "GET",  "path": "",                    "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\PublicPostController@index",      "name": "index" },
+                { "method": "GET",  "path": "/tags",               "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\PublicPostController@tags",       "name": "tags" },
+                { "method": "GET",  "path": "/categories",         "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\PublicPostController@categories", "name": "categories" },
+                { "method": "GET",  "path": "/archive",            "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\PublicPostController@archive",    "name": "archive" },
+                { "method": "GET",  "path": "/popular",            "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\PublicPostController@popular",    "name": "popular" },
+                { "method": "GET",  "path": "/preview/{token}",    "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\PublicPostController@preview",    "name": "preview",
+                  "filters": ["posts.rate_limit:30"] },
+                { "method": "POST", "path": "/views/{id:alphanum}", "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\PublicPostController@view",      "name": "view",
+                  "filters": ["posts.rate_limit:120"] },
+                { "method": "GET",  "path": "/{kind:enum(blog|article|press)}/{slug:slug}", "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\PublicPostController@show", "name": "show" }
+            ]
+        },
+        {
+            "name": "posts.",
+            "filters": ["posts.cache"],
+            "routes": [
+                { "method": "GET", "path": "/feeds/posts/{format:enum(rss|atom|json)}",                         "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\FeedController@all",     "name": "feed" },
+                { "method": "GET", "path": "/feeds/{kind:enum(blog|article|press)}/{format:enum(rss|atom|json)}", "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\FeedController@kind",    "name": "feed.kind" },
+                { "method": "GET", "path": "/sitemaps/posts",                                                    "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\FeedController@sitemap", "name": "sitemap" },
+                { "method": "GET", "path": "/sitemaps/posts-news",                                               "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\FeedController@news",    "name": "sitemap.news" }
+            ]
+        },
+        {
+            "prefix": "/api/admin/posts",
+            "name": "posts.admin.",
+            "filters": ["posts.editor"],
+            "routes": [
+                { "method": "GET",    "path": "",                                        "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminPostController@index",           "name": "index" },
+                { "method": "POST",   "path": "",                                        "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminPostController@store",           "name": "store",
+                  "filters": ["posts.rate_limit:60"] },
+                { "method": "GET",    "path": "/me",                                     "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminPostController@me",              "name": "me" },
+                { "method": "GET",    "path": "/stats",                                  "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminPostController@stats",           "name": "stats" },
+                { "method": "GET",    "path": "/counts",                                 "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminPostController@counts",          "name": "counts" },
+                { "method": "GET",    "path": "/slug",                                   "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminPostController@slug",            "name": "slug" },
+                { "method": "POST",   "path": "/render",                                 "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminPostController@render",          "name": "render",
+                  "filters": ["posts.rate_limit:120"] },
+                { "method": "POST",   "path": "/bulk",                                   "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminPostController@bulk",            "name": "bulk" },
+                { "method": "GET",    "path": "/{id:alphanum}",                          "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminPostController@show",            "name": "show" },
+                { "method": "PUT",    "path": "/{id:alphanum}",                          "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminPostController@update",          "name": "update",
+                  "filters": ["posts.rate_limit:120"] },
+                { "method": "DELETE", "path": "/{id:alphanum}",                          "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminPostController@destroy",         "name": "destroy" },
+                { "method": "POST",   "path": "/{id:alphanum}/restore",                  "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminPostController@restore",         "name": "restore" },
+                { "method": "DELETE", "path": "/{id:alphanum}/permanent",                "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminPostController@purge",           "name": "purge" },
+                { "method": "POST",   "path": "/{id:alphanum}/duplicate",                "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminPostController@duplicate",       "name": "duplicate" },
+                { "method": "GET",    "path": "/{id:alphanum}/revisions",                "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminPostController@revisions",       "name": "revisions" },
+                { "method": "GET",    "path": "/{id:alphanum}/revisions/{number:num}",   "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminPostController@revision",        "name": "revision" },
+                { "method": "POST",   "path": "/{id:alphanum}/revisions/{number:num}/restore", "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminPostController@restoreRevision", "name": "revision.restore" },
+                { "method": "GET",    "path": "/{id:alphanum}/translations",             "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminPostController@translations",    "name": "translations" },
+                { "method": "POST",   "path": "/{id:alphanum}/preview-link",             "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminPostController@previewLink",     "name": "preview_link" }
+            ]
+        },
+        {
+            "prefix": "/api/admin/post-categories",
+            "name": "posts.admin.categories.",
+            "filters": ["posts.editor"],
+            "routes": [
+                { "method": "GET",    "path": "",               "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminCategoryController@index",   "name": "index" },
+                { "method": "POST",   "path": "",               "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminCategoryController@store",   "name": "store" },
+                { "method": "PUT",    "path": "/{id:alphanum}", "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminCategoryController@update",  "name": "update" },
+                { "method": "DELETE", "path": "/{id:alphanum}", "handler": "Plugins\\Posts\\Infrastructure\\Http\\Controllers\\AdminCategoryController@destroy", "name": "destroy" }
+            ]
+        }
+    ],
+
+    "documentation": "The Posts plugin — owns the post.publishing domain: blog posts, articles and press releases in ONE `posts` table, told apart by `kind` (blog | article | press). Categories (a tree), tags, translations linked by group, revisions with restore, a trash, redirects from old slugs, scheduled publishing, related/previous/next, archives, view counts. Bodies are written in markdown | html | text and rendered to SAFE html at save time (league/commonmark + symfony/html-sanitizer). Ships a public JSON API (/api/posts…), RSS/Atom/JSON feeds (/feeds/…), XML + Google News sitemaps (/sitemaps/…), schema.org data and head tags (PostSyndicationContract), and an admin API (/api/admin/posts…, behind its own `posts.editor` filter) with a write / publish / manage permission split. Emits post.published / post.updated / post.unpublished / post.deleted after commit; `hkm posts:publish-due` (every minute) announces scheduled posts when their time comes. Rows live on the request's database — migrations ship in BOTH database/migrations and database/tenant-template.",
+
+    "config": [
+        { "key": "POSTS_PATHS",               "type": "string", "required": false, "default": "blog=/blog/{slug};article=/articles/{slug};press=/press/{slug}" },
+        { "key": "POSTS_SITE_NAME",           "type": "string", "required": false },
+        { "key": "POSTS_SITE_DESCRIPTION",    "type": "string", "required": false },
+        { "key": "POSTS_SITE_LOGO",           "type": "string", "required": false },
+        { "key": "POSTS_TWITTER_HANDLE",      "type": "string", "required": false },
+        { "key": "POSTS_DEFAULT_LOCALE",      "type": "string", "required": false, "default": "en" },
+        { "key": "POSTS_PREVIEW_SECRET",      "type": "string", "required": false },
+        { "key": "POSTS_MAX_REVISIONS",       "type": "int",    "required": false, "default": 50 },
+        { "key": "POSTS_WRITE_PERMISSION",    "type": "string", "required": false, "default": "posts:write" },
+        { "key": "POSTS_PUBLISH_PERMISSION",  "type": "string", "required": false, "default": "posts:publish" },
+        { "key": "POSTS_MANAGE_PERMISSION",   "type": "string", "required": false, "default": "posts:manage" },
+        { "key": "POSTS_NEWS_KINDS",          "type": "string", "required": false, "default": "press,article" },
+        { "key": "POSTS_FEED_FULL_CONTENT",   "type": "bool",   "required": false, "default": true },
+        { "key": "POSTS_VIEW_DEDUPE_SECONDS", "type": "int",    "required": false, "default": 1800 },
+        { "key": "APP_KEY",                   "type": "string", "required": false },
+        { "key": "APP_NAME",                  "type": "string", "required": false }
+    ]
+}

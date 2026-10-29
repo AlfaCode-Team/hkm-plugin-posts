@@ -1,0 +1,35 @@
+{
+    "component": "Posts/Categories",
+    "props": {
+        "pageflow_auth": {
+            "userId": "erin",
+            "tenantId": "tenant-1",
+            "username": "",
+            "fullName": "Erin Editor",
+            "email": "",
+            "avatarUrl": null,
+            "roles": [],
+            "permissions": [
+                "posts:manage"
+            ],
+            "authenticated": true
+        },
+        "errors": [],
+        "capabilities": {
+            "kinds": [
+                "blog",
+                "article",
+                "press"
+            ],
+            "userId": "erin",
+            "canWrite": true,
+            "canPublish": true,
+            "canManage": true
+        },
+        "categories": []
+    },
+    "url": "/admin/posts/categories",
+    "version": "1",
+    "clearHistory": false,
+    "encryptHistory": false
+}

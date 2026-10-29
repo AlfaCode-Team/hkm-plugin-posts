@@ -1,0 +1,9 @@
+{
+  "alias": "@posts",
+  "entry": "index.ts",
+  "framework": "react",
+  "surfaces": {
+    "admin": "admin/Pages"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,80 @@
+{
+    "name": "alfacode-team/hkm-plugin-posts",
+    "description": "HKM Kernel plugin providing 'post.publishing' — blog posts, articles and press releases.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "hkm-kernel",
+        "plugin",
+        "php",
+        "post.publishing",
+        "blog",
+        "articles",
+        "press"
+    ],
+    "require": {
+        "php": ">=8.4",
+        "alfacode-team/php-service-platform": "dev-master",
+        "league/commonmark": "^2.7",
+        "symfony/html-sanitizer": "^7.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Plugins\\Posts\\": ""
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Unit\\Plugins\\Posts\\": "tests/"
+        }
+    },
+    "suggest": {
+        "ext-intl": "Transliterates titles and tags to the same ASCII slug on every platform. Without it, iconv is used, and macOS's iconv yields different (still valid) slugs than Linux's."
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11 || ^12 || ^13",
+        "alfacode-team/hkm-plugin-pageflow": "*",
+        "alfacode-team/hkm-plugin-i18n": "*",
+        "alfacode-team/hkm-plugin-vitemanifest": "*"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/AlfaCode-Team/hkm-plugin-pageflow"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/AlfaCode-Team/hkm-plugin-i18n"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/AlfaCode-Team/hkm-plugin-vitemanifest"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/AlfaCode-Team/hkm-kernel"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/AlfaCode-Team/http"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/AlfaCode-Team/php-io-cli"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/AlfaCode-Team/Let-Migrate"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/hakrichTech/bindIt"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/hakrichTech/type-alias"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

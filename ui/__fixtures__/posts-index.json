@@ -1,0 +1,92 @@
+{
+    "component": "Posts/Index",
+    "props": {
+        "pageflow_auth": {
+            "userId": "erin",
+            "tenantId": "tenant-1",
+            "username": "",
+            "fullName": "Erin Editor",
+            "email": "",
+            "avatarUrl": null,
+            "roles": [],
+            "permissions": [
+                "posts:manage"
+            ],
+            "authenticated": true
+        },
+        "errors": [],
+        "capabilities": {
+            "kinds": [
+                "blog",
+                "article",
+                "press"
+            ],
+            "userId": "erin",
+            "canWrite": true,
+            "canPublish": true,
+            "canManage": true
+        },
+        "categories": [],
+        "initialQuery": {
+            "kind": "blog",
+            "status": "all",
+            "page": 1,
+            "perPage": 20,
+            "order": "created"
+        },
+        "initialPage": {
+            "data": [
+                {
+                    "id": "01M3TQ7CMCZN4Q66N1APN9C9M9",
+                    "kind": "blog",
+                    "locale": "",
+                    "slug": "rendered-via-the-page-route",
+                    "path": "/blog/rendered-via-the-page-route",
+                    "translationGroup": null,
+                    "title": "Rendered via the page route",
+                    "subtitle": null,
+                    "excerpt": null,
+                    "summary": "hi",
+                    "bodyFormat": "markdown",
+                    "readingMinutes": 1,
+                    "coverImageUrl": null,
+                    "coverImageAlt": null,
+                    "authorId": "erin",
+                    "authorName": "Erin Editor",
+                    "tags": [],
+                    "categories": [],
+                    "dateline": null,
+                    "contact": null,
+                    "sourceName": null,
+                    "sourceUrl": null,
+                    "metaTitle": null,
+                    "metaDescription": null,
+                    "canonicalUrl": null,
+                    "noindex": false,
+                    "featured": false,
+                    "commentsEnabled": true,
+                    "published": false,
+                    "publishedAt": null,
+                    "status": "draft",
+                    "viewCount": 0,
+                    "createdBy": "erin",
+                    "createdAt": "2026-10-01T03:13:15+00:00",
+                    "updatedAt": "2026-10-01T03:13:15+00:00",
+                    "deletedAt": null,
+                    "version": 1
+                }
+            ],
+            "meta": {
+                "total": 1,
+                "page": 1,
+                "perPage": 20,
+                "lastPage": 1,
+                "hasMore": false
+            }
+        }
+    },
+    "url": "/admin/posts",
+    "version": "1",
+    "clearHistory": false,
+    "encryptHistory": false
+}
